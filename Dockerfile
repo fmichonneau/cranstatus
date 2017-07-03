@@ -19,6 +19,4 @@ COPY api.R /app/api.R
 
 EXPOSE 8000
 
-ENTRYPOINT ["R", "-e", "pr <- plumber::plumb(commandArgs()[4]); pr$run(port=8000)"]
-
-CMD ["/app/api.R"]
+ENTRYPOINT ["R", "-e", "source('/app/api.R'); pr <- plumber::plumb('/app/api.R'); pr$run(port=8000)"]
