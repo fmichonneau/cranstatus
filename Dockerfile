@@ -6,7 +6,8 @@ RUN apt-get update -qq \
   && apt-get install -y \
        git-core \
        libssl-dev \
-       libcurl4-gnutls-dev
+       libcurl4-gnutls-dev \
+       libxml2-dev
 
 RUN R -e 'install.packages(c("plumber", "dplyr"))'
 
