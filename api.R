@@ -16,7 +16,7 @@ download_cran_file <- function(file = "results") {
         file.symlink(normalizePath(crandb),
                      normalizePath(latest, mustWork = FALSE))
     }
-    check_cran_rds_file(latest, return_logical = TRUE)
+    foghorn:::check_cran_rds_file(latest, return_logical = TRUE)
 }
 download_cran_file()
 
