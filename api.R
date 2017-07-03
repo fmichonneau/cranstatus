@@ -28,8 +28,26 @@ package_status <- function(package, email, ...) {
     if (missing(email))
         email <- NULL
     if (!is.null(package))
-        res <- foghorn:::crandb_pkg_info_pkg(pkg = package)
+        res <- foghorn:::crandb_pkg_info_pkg(pkg = package, file = "data/latest_check_results.rds")
     else if (!is.null(email))
-        res <- foghorn:::crandb_pkg_info_email(email = email)
+        res <- foghorn:::crandb_pkg_info_email(email = email, file = "data/latest_check_results.rds")
     res
+}
+
+
+#* @get /api_status
+api_status <- function() {
+    data_file_info <- file.info(list.files("data", full.names = TRUE))
+    last_data_update <- max(data_file_info$mtime)
+    latest_data <- data_file_info[data_file_info$mtime == last_data_update, ]
+
+    latest_results_exists <- file.exists("data/latest_check_results.rds")
+    using_latest_data <- nrow(latest_data) == 2L
+    latest_data_file <- rownames(latest_data)[!grepl("latest", rownames(latest_data))]
+    list(
+        latest_results_exists = latest_results_exists,
+        last_data_update = last_data_update,
+        using_latest_data = using_latest_data,
+        latest_data_file = basename(latest_data_file)
+    )
 }
