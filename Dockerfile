@@ -18,5 +18,3 @@ RUN mkdir -p /app
 COPY api.R /app/api.R
 
 EXPOSE 8000
-
-ENTRYPOINT ["R", "-e", "source('/app/api.R'); pr <- plumber::plumb('/app/api.R'); pr$run(port=8000)"]
