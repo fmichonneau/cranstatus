@@ -12,9 +12,12 @@ download_cran_file <- function(file = "results") {
                                             dest = "data",
                                             file_prefix = paste0(timestamp, "_"))
     if (file.exists(crandb)) {
-        if (file.exists(latest)) file.remove(latest)
-        file.symlink(normalizePath(crandb),
-                     normalizePath(latest, mustWork = FALSE))
+        if (file.exists(latest)) {
+            file.remove(latest)
+            message("latest_exist: ", file.exists(latest))
+        }
+        file.copy(crandb, latest)
+        if (file.exists(latest)) message("file copied")
     }
     foghorn:::check_cran_rds_file(latest, return_logical = TRUE)
 }
@@ -39,7 +42,7 @@ package_status <- function(package, email, ...) {
 api_status <- function() {
     data_file_info <- file.info(list.files("data", full.names = TRUE))
     last_data_update <- max(data_file_info$mtime)
-    latest_data <- data_file_info[data_file_info$mtime == last_data_update, ]
+    latest_data <- data_file_info[abs(data_file_info$mtime - last_data_update) < 1, ]
 
     latest_results_exists <- file.exists("data/latest_check_results.rds")
     using_latest_data <- nrow(latest_data) == 2L
